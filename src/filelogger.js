@@ -21,6 +21,21 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
     var dateFormat;
     var dateTimezone;
 
+    var getWindowDataDirectory = function(){
+      if(ionic.Platform.isAndroid()){
+        return $window.cordova.file.externalDataDirectory;
+      }else {
+        return $window.cordova.file.syncedDataDirectory;
+      }
+    };
+    var getDataDirectory = function(){
+      if(ionic.Platform.isAndroid()){
+        return cordova.file.externalDataDirectory;
+      }else {
+        return cordova.file.syncedDataDirectory;
+      }
+    };
+
     // detecting Ripple Emulator
     // https://gist.github.com/triceam/4658021
     function isRipple() {
@@ -171,15 +186,15 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
 
       } else {
 
-        if (!$window.cordova || !$window.cordova.file || !$window.cordova.file.externalDataDirectory) {
-          q.reject('cordova.file.externalDataDirectory is not available');
+        if (!$window.cordova || !$window.cordova.file || !getWindowDataDirectory()) {
+          q.reject('dataDirectory is not available');
           return q.promise;
         }
 
-        $cordovaFile.checkFile(cordova.file.externalDataDirectory, storageFilename).then(
+        $cordovaFile.checkFile(getDataDirectory(), storageFilename).then(
           function() {
             // writeExistingFile(path, fileName, text)
-            $cordovaFile.writeExistingFile(cordova.file.externalDataDirectory, storageFilename, message).then(
+            $cordovaFile.writeExistingFile(getDataDirectory(), storageFilename, message).then(
               function() {
                 q.resolve();
               },
@@ -190,7 +205,7 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
           },
           function() {
             // writeFile(path, fileName, text, replaceBool)
-            $cordovaFile.writeFile(cordova.file.externalDataDirectory, storageFilename, message, true).then(
+            $cordovaFile.writeFile(getDataDirectory(), storageFilename, message, true).then(
               function() {
                 q.resolve();
               },
@@ -214,12 +229,12 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
         q.resolve($window.localStorage[storageFilename]);
       } else {
 
-        if (!$window.cordova || !$window.cordova.file || !$window.cordova.file.externalDataDirectory) {
-          q.reject('cordova.file.externalDataDirectory is not available');
+        if (!$window.cordova || !$window.cordova.file || !getWindowDataDirectory()) {
+          q.reject('dataDirectory is not available');
           return q.promise;
         }
 
-        $cordovaFile.readAsText(cordova.file.externalDataDirectory, storageFilename).then(
+        $cordovaFile.readAsText(getDataDirectory(), storageFilename).then(
           function(result) {
             q.resolve(result);
           },
@@ -241,12 +256,12 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
         q.resolve();
       } else {
 
-        if (!$window.cordova || !$window.cordova.file || !$window.cordova.file.externalDataDirectory) {
-          q.reject('cordova.file.externalDataDirectory is not available');
+        if (!$window.cordova || !$window.cordova.file || !getWindowDataDirectory()) {
+          q.reject('dataDirectory is not available');
           return q.promise;
         }
 
-        $cordovaFile.removeFile(cordova.file.externalDataDirectory, storageFilename).then(
+        $cordovaFile.removeFile(getDataDirectory(), storageFilename).then(
           function(result) {
             q.resolve(result);
           },
@@ -297,12 +312,12 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
 
       } else {
 
-        if (!$window.cordova || !$window.cordova.file || !$window.cordova.file.externalDataDirectory) {
-          q.reject('cordova.file.externalDataDirectory is not available');
+        if (!$window.cordova || !$window.cordova.file || !getWindowDataDirectory()) {
+          q.reject('dataDirectory is not available');
           return q.promise;
         }
 
-        $cordovaFile.checkFile(cordova.file.externalDataDirectory, storageFilename).then(function(fileEntry) {
+        $cordovaFile.checkFile(getDataDirectory(), storageFilename).then(function(fileEntry) {
           fileEntry.file(q.resolve, q.reject);
         }, q.reject);
 
