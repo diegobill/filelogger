@@ -25,14 +25,14 @@ angular.module('fileLogger', ['ngCordova.plugins.file'])
       if(ionic.Platform.isAndroid()){
         return $window.cordova.file.externalDataDirectory;
       }else {
-        return $window.cordova.file.syncedDataDirectory;
+        return $window.cordova.file.documentsDirectory;
       }
     };
     var getDataDirectory = function(){
       if(ionic.Platform.isAndroid()){
         return cordova.file.externalDataDirectory;
       }else {
-        return cordova.file.syncedDataDirectory;
+        return cordova.file.documentsDirectory;
       }
     };
 
